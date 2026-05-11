@@ -2,6 +2,7 @@ package com.edu.kpi.marketplace.marketplace.controller;
 
 import com.edu.kpi.marketplace.marketplace.dto.ProductDto;
 import com.edu.kpi.marketplace.marketplace.service.ProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,31 +26,37 @@ public class ProductController {
     }
 
     @GetMapping("/brand/{brand}")
-    public List<ProductDto> getByBrand(
-            @PathVariable String brand
-    ) {
+    public List<ProductDto> getByBrand(@PathVariable String brand) {
         return service.findByBrand(brand);
     }
 
     @GetMapping("/category/{categoryId}")
-    public List<ProductDto> getByCategory(
-            @PathVariable String categoryId
-    ) {
+    public List<ProductDto> getByCategory(@PathVariable String categoryId) {
         return service.findByCategory(categoryId);
     }
 
     @PostMapping
-    public ProductDto create(@RequestBody ProductDto productDto) {
-        return service.save(productDto);
+    public ProductDto create(@Valid @RequestBody ProductDto dto) {
+        return service.save(dto);
     }
 
     @PutMapping("/{id}")
-    public ProductDto update(
-            @PathVariable String id,
-            @RequestBody ProductDto productDto
+    public ProductDto update(@PathVariable String id, @Valid @RequestBody ProductDto dto) {
+        dto.setId(id);
+        return service.save(dto);
+    }
+
+    @GetMapping("/search")
+    public List<ProductDto> search(@RequestParam String q) {
+        return service.search(q);
+    }
+
+    @GetMapping("/compatibility")
+    public List<ProductDto> searchByCompatibility(@RequestParam(required = false) String make,
+            @RequestParam(required = false) String model,
+            @RequestParam(required = false) Integer year
     ) {
-        productDto.setId(id);
-        return service.save(productDto);
+        return service.findByCompatibility(make, model, year);
     }
 
     @DeleteMapping("/{id}")

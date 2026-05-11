@@ -1,7 +1,9 @@
 package com.edu.kpi.marketplace.marketplace.controller;
 
 import com.edu.kpi.marketplace.marketplace.dto.OrderDto;
+import com.edu.kpi.marketplace.marketplace.dto.UpdateOrderStatusDto;
 import com.edu.kpi.marketplace.marketplace.service.OrderService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,15 +27,18 @@ public class OrderController {
     }
 
     @GetMapping("/user/{userId}")
-    public List<OrderDto> getByUserId(
-            @PathVariable String userId
-    ) {
+    public List<OrderDto> getByUser(@PathVariable String userId) {
         return service.findByUserId(userId);
     }
 
     @PostMapping
-    public OrderDto create(@RequestBody OrderDto orderDto) {
-        return service.create(orderDto);
+    public OrderDto create(@Valid @RequestBody OrderDto dto) {
+        return service.create(dto);
+    }
+
+    @PatchMapping("/{id}/status")
+    public OrderDto updateStatus(@PathVariable String id, @Valid @RequestBody UpdateOrderStatusDto dto) {
+        return service.updateStatus(id, dto.getStatus());
     }
 
     @DeleteMapping("/{id}")

@@ -47,6 +47,35 @@ public class ProductService {
                 .toList();
     }
 
+    public ProductDto decreaseStock(String productId, int qty) {
+
+        Product product = repository.findById(productId)
+                .orElseThrow();
+
+        if (product.getStock() < qty) {
+            throw new IllegalStateException("Not enough stock");
+        }
+
+        product.setStock(product.getStock() - qty);
+
+        return toDto(repository.save(product));
+    }
+
+    public List<ProductDto> findByCompatibility(String make, String model, Integer year) {
+
+        return repository.findByCompatibility(make, model, year)
+                .stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    public List<ProductDto> search(String query) {
+        return repository.search(query)
+                .stream()
+                .map(this::toDto)
+                .toList();
+    }
+
     private Product toEntity(ProductDto dto) {
         if (dto == null) return null;
 

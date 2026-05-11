@@ -2,6 +2,7 @@ package com.edu.kpi.marketplace.marketplace.controller;
 
 import com.edu.kpi.marketplace.marketplace.dto.CategoryDto;
 import com.edu.kpi.marketplace.marketplace.service.CategoryService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,14 +26,13 @@ public class CategoryController {
     }
 
     @PostMapping
-    public CategoryDto create(@RequestBody CategoryDto categoryDto) {
+    public CategoryDto create(@Valid @RequestBody CategoryDto categoryDto) {
         return service.save(categoryDto);
     }
 
     @PutMapping("/{id}")
-    public CategoryDto update(
-            @PathVariable String id,
-            @RequestBody CategoryDto categoryDto
+    public CategoryDto update(@PathVariable String id,
+                              @Valid @RequestBody CategoryDto categoryDto
     ) {
         categoryDto.setId(id);
         return service.save(categoryDto);

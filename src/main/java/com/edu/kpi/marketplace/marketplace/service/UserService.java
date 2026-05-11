@@ -4,6 +4,7 @@ import com.edu.kpi.marketplace.marketplace.dto.UserDto;
 import com.edu.kpi.marketplace.marketplace.model.User;
 import com.edu.kpi.marketplace.marketplace.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public UserDto create(UserDto userDto) {
 
@@ -23,6 +25,7 @@ public class UserService {
         }
 
         User user = toEntity(userDto);
+        user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
         user.setRole("USER");
 
         return toDto(userRepository.save(user));
@@ -44,7 +47,7 @@ public class UserService {
         existingUser.setEmail(userDTO.getEmail());
 
         if (userDTO.getPassword() != null && !userDTO.getPassword().isBlank()) {
-            //existingUser.setPasswordHash(passwordEncoder.encode(userDTO.getPassword()));
+            existingUser.setPasswordHash(passwordEncoder.encode(userDTO.getPassword()));
         }
         userRepository.save(existingUser);
     }

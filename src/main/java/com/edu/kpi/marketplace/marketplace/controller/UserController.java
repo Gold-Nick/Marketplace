@@ -2,6 +2,7 @@ package com.edu.kpi.marketplace.marketplace.controller;
 
 import com.edu.kpi.marketplace.marketplace.dto.UserDto;
 import com.edu.kpi.marketplace.marketplace.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,14 +26,13 @@ public class UserController {
     }
 
     @PostMapping
-    public UserDto create(@RequestBody UserDto userDto) {
+    public UserDto create(@Valid @RequestBody UserDto userDto) {
         return service.create(userDto);
     }
 
     @PutMapping("/{id}")
-    public void update(
-            @PathVariable String id,
-            @RequestBody UserDto userDto
+    public void update(@PathVariable String id,
+                       @Valid @RequestBody UserDto userDto
     ) {
         service.updateUser(id, userDto);
     }
